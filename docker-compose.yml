@@ -96,7 +96,7 @@ services:
     configs:
       - source: traefik_config
         target: /etc/traefik/traefik.yml
-    image: traefik:2.11.0
+    image: traefik:2.11.2
     labels:
       - traefik.enable=true
       - traefik.http.routers.traefik.rule=Host(`traefik.${HOST:-localhost}`)
@@ -107,11 +107,9 @@ services:
       - 80:80
       - 443:443
     volumes:
-      - traefik:/var/lib/traefik
       - /run/docker.sock:/run/docker.sock
 volumes:
   mailpit:
   mysql_var_lib:
   mysql_var_log:
   portainer:
-  traefik:
