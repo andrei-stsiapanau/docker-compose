@@ -1,0 +1,16 @@
+services:
+  phpmyadmin:
+    environment:
+      PMA_HOST: mysql.${HOST:-localhost}
+      PMA_PASSWORD_FILE: /run/secrets/mysql_password
+      PMA_USER_FILE: /run/secrets/mysql_user
+    image: phpmyadmin:5.2.1
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.phpmyadmin.rule=Host(`pma.${HOST:-localhost}`)
+    networks:
+      - mysql
+      - traefik
+    secrets:
+      - mysql_password
+      - mysql_user

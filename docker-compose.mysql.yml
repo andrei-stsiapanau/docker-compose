@@ -1,0 +1,28 @@
+networks:
+  mysql:
+    name: mysql
+services:
+  mysql:
+    environment:
+      MYSQL_DATABASE_FILE: /run/secrets/mysql_database
+      MYSQL_PASSWORD_FILE: /run/secrets/mysql_password
+      MYSQL_ROOT_PASSWORD_FILE: /run/secrets/mysql_root_password
+      MYSQL_USER_FILE: /run/secrets/mysql_user
+    image: percona:8.0.36-28
+    networks:
+      mysql:
+        aliases:
+          - mysql.${HOST:-localhost}
+    ports:
+      - 3306:3306
+    secrets:
+      - mysql_database
+      - mysql_password
+      - mysql_root_password
+      - mysql_user
+    volumes:
+      - mysql_var_lib_mysql:/var/lib/mysql
+      - mysql_var_log_mysql:/var/log/mysql
+volumes:
+  mysql_var_lib_mysql:
+  mysql_var_log_mysql:

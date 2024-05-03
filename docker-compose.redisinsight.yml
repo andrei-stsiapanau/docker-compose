@@ -1,0 +1,18 @@
+networks:
+  redis:
+    name: redisinsight
+services:
+  redisinsight:
+    image: redislabs/redisinsight:1.14.0
+    labels:
+      - traefik.enable=true
+      - traefik.http.services.redisinsight.loadbalancer.server.port=8001
+      - traefik.http.routers.redisinsight.rule=Host(`redisinsight.${HOST:-localhost}`)
+      - traefik.http.routers.redisinsight.service=redisinsight
+    networks:
+      - redis
+      - traefik
+    volumes:
+      - redisinsight_data:/data
+volumes:
+  redisinsight_data:

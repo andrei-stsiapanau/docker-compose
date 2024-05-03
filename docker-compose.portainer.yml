@@ -1,0 +1,20 @@
+services:
+  portainer:
+    command: --admin-password-file=/run/secrets/portainer_admin_password
+    image: portainer/portainer-ce:2.20.0
+    labels:
+      - traefik.enable=true
+      - traefik.http.services.portainer.loadbalancer.server.port=9000
+      - traefik.http.routers.portainer-dashboard.rule=Host(`portainer.${HOST:-localhost}`)
+      - traefik.http.routers.portainer-dashboard.service=portainer
+      - traefik.http.routers.portainer-api.rule=Host(`portainer.${HOST:-localhost}`) && PathPrefix(`/api`)
+      - traefik.http.routers.portainer-api.service=portainer
+    networks:
+      - traefik
+    secrets:
+      - portainer_admin_password
+    volumes:
+      - /run/docker.sock:/var/run/docker.sock
+      - portainer_data:/data
+volumes:
+  portainer_data:

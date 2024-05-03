@@ -1,0 +1,22 @@
+networks:
+  mail:
+    name: mail
+services:
+  mailpit:
+    expose:
+      - 1025
+    image: axllent/mailpit:v1.15.0
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.mailpit.rule=Host(`mailpit.${APP_HOST:-localhost}`)
+      - traefik.http.routers.mailpit.service=mailpit
+      - traefik.http.services.mailpit.loadbalancer.server.port=8025
+    networks:
+      mail:
+        aliases:
+          - mailpit.${HOST:-localhost}
+      traefik:
+    volumes:
+      - mailpit_data:/data
+volumes:
+  mailpit_data:

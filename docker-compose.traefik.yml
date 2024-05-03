@@ -1,0 +1,22 @@
+configs:
+  traefik_config:
+    file: ./configs/traefik/traefik.yml
+networks:
+  traefik:
+    name: traefik
+services:
+  traefik:
+    configs:
+      - source: traefik_config
+        target: /etc/traefik/traefik.yml
+    image: traefik:2.11.2
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.traefik.rule=Host(`traefik.${HOST:-localhost}`)
+      - traefik.http.routers.traefik.service=api@internal
+    networks:
+      - traefik
+    ports:
+      - 80:80
+    volumes:
+      - /run/docker.sock:/run/docker.sock
